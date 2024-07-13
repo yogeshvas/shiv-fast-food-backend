@@ -126,7 +126,7 @@ export const getTodayActiveOrders = async (req, res) => {
         $lt: endOfDay,
       },
       status: "PLACED",
-    });
+    }).populate("items.foodItem");
 
     // Send the orders in the response
     res.status(200).json(orders);
@@ -151,7 +151,7 @@ export const getTodayAcceptedOrders = async (req, res) => {
         $lt: endOfDay,
       },
       status: "ACCEPTED",
-    });
+    }).populate("items.foodItem");
 
     // Send the orders in the response
     res.status(200).json(orders);
@@ -176,7 +176,7 @@ export const getTodayDeliveredOrders = async (req, res) => {
         $lt: endOfDay,
       },
       status: "DELIVERED",
-    });
+    }).populate("items.foodItem");
 
     // Send the orders in the response
     res.status(200).json(orders);
