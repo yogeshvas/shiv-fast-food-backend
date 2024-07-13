@@ -103,7 +103,7 @@ export const updateOrderStatus = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const allOrders = await Order.find();
+    const allOrders = await Order.find().populate("items.foodItem");
     return res.status(200).json({ message: "All orders", allOrders });
   } catch (error) {
     // Log the error and respond with a generic message
