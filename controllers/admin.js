@@ -2,7 +2,9 @@ import { Order } from "../models/order.js";
 
 export const getDashboardData = async (req, res) => {
   try {
-    const acceptedOrders = await Order.find({ status: "PLACED" });
+    const acceptedOrders = await Order.find({
+      status: { $in: ["PLACED", "ACCEPTED"] },
+    });
 
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0); // Set time to 00:00:00
