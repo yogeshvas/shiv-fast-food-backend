@@ -121,10 +121,6 @@ export const getTodayActiveOrders = async (req, res) => {
     endOfDay.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
 
     const orders = await Order.find({
-      createdAt: {
-        $gte: startOfDay,
-        $lt: endOfDay,
-      },
       status: "PLACED",
     }).populate("items.foodItem");
 
@@ -139,12 +135,6 @@ export const getTodayActiveOrders = async (req, res) => {
 
 export const getTodayAcceptedOrders = async (req, res) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0); // Set time to 00:00:00
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
-
     const orders = await Order.find({
       createdAt: {
         $gte: startOfDay,
@@ -164,12 +154,6 @@ export const getTodayAcceptedOrders = async (req, res) => {
 
 export const getTodayDeliveredOrders = async (req, res) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0); // Set time to 00:00:00
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
-
     const orders = await Order.find({
       createdAt: {
         $gte: startOfDay,
@@ -189,12 +173,6 @@ export const getTodayDeliveredOrders = async (req, res) => {
 
 export const getTodayCancelledOrders = async (req, res) => {
   try {
-    const startOfDay = new Date();
-    startOfDay.setHours(0, 0, 0, 0); // Set time to 00:00:00
-
-    const endOfDay = new Date();
-    endOfDay.setHours(23, 59, 59, 999); // Set time to 23:59:59.999
-
     const orders = await Order.find({
       createdAt: {
         $gte: startOfDay,
