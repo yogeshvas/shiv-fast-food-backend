@@ -2,6 +2,7 @@ import { response } from "express";
 import { FoodItem } from "../models/food-item.js";
 import { Order } from "../models/order.js";
 import mongoose from "mongoose";
+import { startOfMonth, endOfMonth } from "date-fns";
 
 // Function to get the start and end of the current day
 const getTodayDateRange = () => {
@@ -115,8 +116,19 @@ export const updateOrderStatus = async (req, res) => {
 
 export const getAllOrders = async (req, res) => {
   try {
-    const allOrders = await Order.find().populate("items.foodItem");
-    return res.status(200).json({ message: "All orders", allOrders });
+    const startDate = startOfMonth(new Date());
+    const endDate = endOfMonth(new Date());
+
+    const allOrders = await Order.find({
+      createdAt: {
+        $gte: startDate,
+        $lte: endDate,
+      },
+    }).populate("items.foodItem");
+
+    return res
+      .status(200)
+      .json({ message: "All orders for the current month", allOrders });
   } catch (error) {
     // Log the error and respond with a generic message
     console.error(error);
