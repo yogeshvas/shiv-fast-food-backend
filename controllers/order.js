@@ -1,6 +1,18 @@
 import { response } from "express";
 import { FoodItem } from "../models/food-item.js";
 import { Order } from "../models/order.js";
+import mongoose from "mongoose";
+
+// Function to get the start and end of the current day
+const getTodayDateRange = () => {
+  const startOfDay = new Date();
+  startOfDay.setHours(0, 0, 0, 0);
+
+  const endOfDay = new Date();
+  endOfDay.setHours(23, 59, 59, 999);
+
+  return { startOfDay, endOfDay };
+};
 
 export const addOrder = async (req, res) => {
   try {
@@ -114,60 +126,76 @@ export const getAllOrders = async (req, res) => {
 
 export const getTodayActiveOrders = async (req, res) => {
   try {
+    const { startOfDay, endOfDay } = getTodayDateRange();
+
     const orders = await Order.find({
       status: "PLACED",
+      createdAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
     }).populate("items.foodItem");
 
-    // Send the orders in the response
     res.status(200).json(orders);
   } catch (error) {
-    // Handle errors
-    console.error("Error getting today's orders:", error);
+    console.error("Error getting today's active orders:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const getTodayAcceptedOrders = async (req, res) => {
   try {
+    const { startOfDay, endOfDay } = getTodayDateRange();
+
     const orders = await Order.find({
       status: "ACCEPTED",
+      createdAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
     }).populate("items.foodItem");
 
-    // Send the orders in the response
     res.status(200).json(orders);
   } catch (error) {
-    // Handle errors
-    console.error("Error getting today's orders:", error);
+    console.error("Error getting today's accepted orders:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const getTodayDeliveredOrders = async (req, res) => {
   try {
+    const { startOfDay, endOfDay } = getTodayDateRange();
+
     const orders = await Order.find({
       status: "DELIVERED",
+      createdAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
     }).populate("items.foodItem");
 
-    // Send the orders in the response
     res.status(200).json(orders);
   } catch (error) {
-    // Handle errors
-    console.error("Error getting today's orders:", error);
+    console.error("Error getting today's delivered orders:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };
 
 export const getTodayCancelledOrders = async (req, res) => {
   try {
+    const { startOfDay, endOfDay } = getTodayDateRange();
+
     const orders = await Order.find({
       status: "CANCELLED",
+      createdAt: {
+        $gte: startOfDay,
+        $lte: endOfDay,
+      },
     });
 
-    // Send the orders in the response
     res.status(200).json(orders);
   } catch (error) {
-    // Handle errors
-    console.error("Error getting today's orders:", error);
+    console.error("Error getting today's cancelled orders:", error);
     res.status(500).json({ message: "Internal server error" });
   }
 };

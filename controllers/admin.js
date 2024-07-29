@@ -2,10 +2,6 @@ import { Order } from "../models/order.js";
 
 export const getDashboardData = async (req, res) => {
   try {
-    const acceptedOrders = await Order.find({
-      status: { $in: ["PLACED", "ACCEPTED"] },
-    });
-
     const startOfDay = new Date();
     startOfDay.setHours(0, 0, 0, 0); // Set time to 00:00:00
 
@@ -15,7 +11,14 @@ export const getDashboardData = async (req, res) => {
     const startOfMonth = new Date(startOfDay);
     startOfMonth.setDate(1); // Set day to the first day of the month
     startOfMonth.setHours(0, 0, 0, 0); // Set time to 00:00:00
-
+    
+    const acceptedOrders = await Order.find({
+      status: { $in: ["PLACED", "ACCEPTED"] },
+      createdAt: {
+        $gte: startOfDay,
+        $lt: endOfDay,
+      },
+    });
     const todayOrders = await Order.find({
       createdAt: {
         $gte: startOfDay,
