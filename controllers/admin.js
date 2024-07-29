@@ -37,11 +37,35 @@ export const getDashboardData = async (req, res) => {
       0
     );
 
+    // Start of the week (Sunday)
+    const startOfWeek = new Date(startOfDay);
+    const dayOfWeek = startOfDay.getDay(); // Sunday = 0, Monday = 1, ..., Saturday = 6
+    startOfWeek.setDate(startOfDay.getDate() - dayOfWeek);
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    // Find all orders for the current week
+    const weekOrders = await Order.find({
+      createdAt: {
+        $gte: startOfWeek,
+        $lt: endOfDay,
+      },
+    });
+
+    // Initialize an array with 7 zeros
+    const weeklyEarnings = new Array(7).fill(0);
+
+    // Segregate orders based on the day of the week and calculate total amounts
+    weekOrders.forEach((order) => {
+      const orderDay = new Date(order.createdAt).getDay();
+      weeklyEarnings[orderDay] += order.totalAmount;
+    });
+
     res.status(200).json({
       acceptedOrders: acceptedOrders.length,
       allOrders: todayOrders.length,
       totalAmountToday,
       totalAmountMonthly,
+      weeklyEarnings,
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to get dashboard data", error });
