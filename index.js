@@ -13,7 +13,7 @@ const app = express();
 
 // CORS configuration
 const corsOptions = {
-  origin: "http://localhost:5173", // Allow your frontend origin
+  origin: "https://shiv-fast-food.netlify.app", // Allow your frontend origin
   methods: ["GET", "POST", "PUT", "DELETE", "PATCH"], // Allowed methods
   allowedHeaders: ["Content-Type", "Authorization"], // Allowed headers
   credentials: true, // Allow credentials
