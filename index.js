@@ -1,13 +1,12 @@
 import cors from "cors";
 import dotenv from "dotenv";
+dotenv.config();
 import express from "express";
 import { getDashboardData } from "./controllers/admin.js";
 import connectDB from "./db/connectMongo.js";
 import kitchenRoutes from "./routes/kitchen.js";
 import menuRoutes from "./routes/menu.js";
 import orderRoutes from "./routes/order.js";
-
-dotenv.config();
 
 const app = express();
 
