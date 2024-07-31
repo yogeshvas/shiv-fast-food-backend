@@ -3,7 +3,9 @@ import { FoodItem } from "../models/food-item.js";
 import { Order } from "../models/order.js";
 import mongoose from "mongoose";
 import { startOfMonth, endOfMonth } from "date-fns";
-
+import admin from "firebase-admin";
+import dotenv from "dotenv";
+dotenv.config();
 // Function to get the start and end of the current day
 const getTodayDateRange = () => {
   const startOfDay = new Date();
@@ -14,6 +16,26 @@ const getTodayDateRange = () => {
 
   return { startOfDay, endOfDay };
 };
+
+// Initialize Firebase Admin SDK
+// let serviceAccount;
+let serviceAccount;
+try {
+  const serviceAccountStr = process.env.FIREBASE_SERVICE_ACCOUNT;
+  if (!serviceAccountStr) {
+    throw new Error(
+      "FIREBASE_SERVICE_ACCOUNT environment variable is not set."
+    );
+  }
+  serviceAccount = JSON.parse(serviceAccountStr);
+} catch (error) {
+  console.error("Error parsing FIREBASE_SERVICE_ACCOUNT:", error);
+  process.exit(1);
+}
+
+admin.initializeApp({
+  credential: admin.credential.cert(serviceAccount),
+});
 
 export const addOrder = async (req, res) => {
   try {
@@ -63,6 +85,17 @@ export const addOrder = async (req, res) => {
 
     // Save order to the database
     const savedOrder = await newOrder.save();
+
+    // Send Firebase notification
+    const message = {
+      notification: {
+        title: "New Order Received",
+        body: `Order from ${customerName} has been received.`,
+      },
+      topic: "orders", // Or you can use a specific token for individual devices
+    };
+
+    await admin.messaging().send(message);
 
     // Return success response
     res.status(201).json(savedOrder);
