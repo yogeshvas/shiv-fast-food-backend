@@ -40,6 +40,12 @@ const orderSchema = new mongoose.Schema(
     customization: {
       type: String,
     },
+    // added user recently
+    user: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
+      required: true,
+    },
   },
   { timestamps: true }
 );
