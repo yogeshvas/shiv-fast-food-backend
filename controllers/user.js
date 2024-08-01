@@ -34,9 +34,14 @@ export const getOrderHistory = async (req, res) => {
       return res.status(400).json({ error: "User ID is required" });
     }
 
-    const user = await User.findOne({ uid }).populate("orders");
+    const user = await User.findOne({ uid }).populate({
+      path: "orders",
+      populate: {
+        path: "items.foodItem",
+      },
+    });
     if (!user) {
-      return res.status(404).json({ error: "User not found" });
+      return res.status(200).json({ message: "No Order Fount" });
     }
 
     return res.status(200).json({ user });
