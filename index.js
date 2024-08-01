@@ -1,13 +1,14 @@
 import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config();
 import express from "express";
 import { getDashboardData } from "./controllers/admin.js";
 import connectDB from "./db/connectMongo.js";
+import categoryRoutes from "./routes/category.js";
 import kitchenRoutes from "./routes/kitchen.js";
 import menuRoutes from "./routes/menu.js";
 import orderRoutes from "./routes/order.js";
 import userRoutes from "./routes/user.js";
+dotenv.config();
 
 const app = express();
 
@@ -29,6 +30,7 @@ app.use("/api/v1/menu", menuRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/kitchen", kitchenRoutes);
 app.use("/api/v1/user", userRoutes);
+app.use("/api/v1/category", categoryRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;
