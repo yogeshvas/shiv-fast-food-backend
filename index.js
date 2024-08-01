@@ -7,6 +7,7 @@ import connectDB from "./db/connectMongo.js";
 import kitchenRoutes from "./routes/kitchen.js";
 import menuRoutes from "./routes/menu.js";
 import orderRoutes from "./routes/order.js";
+import userRoutes from "./routes/user.js";
 
 const app = express();
 
@@ -27,6 +28,7 @@ app.get("/", getDashboardData);
 app.use("/api/v1/menu", menuRoutes);
 app.use("/api/v1/order", orderRoutes);
 app.use("/api/v1/kitchen", kitchenRoutes);
+app.use("/api/v1/user", userRoutes);
 
 // Start the server
 const PORT = process.env.PORT || 3000;

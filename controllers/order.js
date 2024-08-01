@@ -5,6 +5,7 @@ import mongoose from "mongoose";
 import { startOfMonth, endOfMonth } from "date-fns";
 import admin from "firebase-admin";
 import dotenv from "dotenv";
+import { User } from "../models/user.js";
 dotenv.config();
 // Function to get the start and end of the current day
 const getTodayDateRange = () => {
@@ -46,6 +47,7 @@ export const addOrder = async (req, res) => {
       items,
       totalAmount,
       customization,
+      uid,
     } = req.body;
 
     if (
@@ -53,7 +55,8 @@ export const addOrder = async (req, res) => {
       !customerPhoneNo ||
       !customerAddress ||
       !items ||
-      !totalAmount
+      !totalAmount ||
+      !uid
     ) {
       return res
         .status(400)
@@ -74,6 +77,8 @@ export const addOrder = async (req, res) => {
           .json({ message: `Food item with ID ${item.foodItem} not found.` });
       }
     }
+
+    const user = await User.findOne({ uid });
     const newOrder = new Order({
       customerName,
       customerPhoneNo,
@@ -81,11 +86,14 @@ export const addOrder = async (req, res) => {
       items,
       totalAmount,
       customization,
+      user: user._id,
     });
 
     // Save order to the database
     const savedOrder = await newOrder.save();
 
+    user.orders.push(savedOrder._id);
+    user.save();
     // Send Firebase notification
     const message = {
       notification: {
