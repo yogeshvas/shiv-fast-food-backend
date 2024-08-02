@@ -1,29 +1,34 @@
+import { Category } from "../models/Category.js";
 import { FoodItem } from "../models/food-item.js";
 
 export const addFoodItem = async (req, res) => {
   try {
-    const { name, price, availability, nonVeg } = req.body;
+    const { name, price, availability, nonVeg, category } = req.body;
 
     // Validation checks
-    if (!name) {
-      return res.status(400).json({ message: "Name is required" });
-    }
-    if (typeof name !== "string" || name.trim().length === 0) {
+    if (!name || typeof name !== "string" || name.trim().length === 0) {
       return res.status(400).json({ message: "Invalid name" });
     }
-
-    if (price === undefined) {
-      return res.status(400).json({ message: "Price is required" });
-    }
-    if (typeof price !== "number" || price <= 0) {
+    if (price === undefined || typeof price !== "number" || price <= 0) {
       return res.status(400).json({ message: "Invalid price" });
     }
-    //saving food to database
+    if (!category || typeof category !== "string" || category.trim().length === 0) {
+      return res.status(400).json({ message: "Invalid category" });
+    }
+
+    // Check if the category exists
+    const categoryExists = await Category.findOne({ name: category });
+    if (!categoryExists) {
+      return res.status(400).json({ message: "Category does not exist" });
+    }
+
+    // Saving food to database
     const newFoodItem = await FoodItem.create({
       name,
       price,
       availability,
       nonVeg,
+      category,
     });
 
     return res.status(201).json(newFoodItem);
