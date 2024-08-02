@@ -1,5 +1,5 @@
-import mongoose from 'mongoose';
-
+import mongoose from "mongoose";
+// done
 const categorySchema = new mongoose.Schema(
   {
     name: {
@@ -11,4 +11,4 @@ const categorySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const Category = mongoose.model('Category', categorySchema);
+export const Category = mongoose.model("Category", categorySchema);

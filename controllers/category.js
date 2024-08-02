@@ -1,5 +1,4 @@
-import { Category } from "../models/Category.js";
-
+import { Category } from "../models/category.js";
 
 export const addCategory = async (req, res) => {
   try {
@@ -27,11 +26,11 @@ export const addCategory = async (req, res) => {
 };
 
 export const getCategories = async (req, res) => {
-    try {
-      const categories = await Category.find();
-      return res.status(200).json(categories);
-    } catch (error) {
-      console.error("Error in getCategories:", error.stack);
-      return res.status(500).json({ message: "Can't get categories" });
-    }
-  };
+  try {
+    const categories = await Category.find();
+    return res.status(200).json(categories);
+  } catch (error) {
+    console.error("Error in getCategories:", error.stack);
+    return res.status(500).json({ message: "Can't get categories" });
+  }
+};

@@ -45,4 +45,3 @@ export const updateKitchenStatus = async (req, res) => {
       .send({ error: "An error occurred while updating the kitchen status" });
   }
 };
-

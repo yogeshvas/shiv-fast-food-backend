@@ -1,4 +1,4 @@
-import { Category } from "../models/Category.js";
+import { Category } from "../models/category.js";
 import { FoodItem } from "../models/food-item.js";
 
 export const addFoodItem = async (req, res) => {
@@ -12,7 +12,11 @@ export const addFoodItem = async (req, res) => {
     if (price === undefined || typeof price !== "number" || price <= 0) {
       return res.status(400).json({ message: "Invalid price" });
     }
-    if (!category || typeof category !== "string" || category.trim().length === 0) {
+    if (
+      !category ||
+      typeof category !== "string" ||
+      category.trim().length === 0
+    ) {
       return res.status(400).json({ message: "Invalid category" });
     }
 
